@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Result</title>
+    <link rel="icon" href={{ url_for('static',filename = "images/favicon.ico") }}>
+    <link rel="shortcut icon" href={{ url_for('static',filename = "images/favicon.ico") }}>
+    <link rel="stylesheet" href={{ url_for('static',filename = "css/list.css") }}>
+    <link rel="stylesheet" href={{ url_for('static',filename = "css/style.css") }}>
+    <link rel="stylesheet" href={{ url_for('static',filename = "css/newStyle.css") }}>
+    <link rel="stylesheet" href={{ url_for('static',filename = "css/apexcharts.css") }}>
+    <script src="/static/js/apexcharts.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+
+</br></br></br>
+<div class="container_12">
+    <div class="grid_12">
+        <h1><a href="/Home"><img src="/static/images/logo_34.png" alt="Boo House"></a></h1>
+        <div class="clear"></div>
+    </div>
+</div>
+</br>
+<div class="newWrapper">
+    <div class="item1" style="text-align: center">
+        <img src="/static/images/profile_1.jpg">
+    </div>
+    <div class="text2">
+        <div class="text2" style="text-align: right">
+            个人信息&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </br>
+        姓名：{{ name }} </br></br>
+        职位：{{ position }} </br></br>
+        所属部门：{{ department }} </br>
+    </div>
+    <div class="text2">
+        </br></br>
+        发文量：{{ public }} </br></br>
+        引用量：{{ quote }} </br>
+    </div>
+    <div style="text-align: center" class="item3">
+        <div id="chart" style="text-align: center"></div>
+        <script>
+            $(function () {
+                $.get('/data', function (data) {
+                    var options = {
+                        chart: {
+                            type: 'line',
+                            height: 650,
+                            foreColor: '#000524'
+                        },
+                        title: {
+                            text: '发文量与引用量',
+                            align: 'left'
+                        },
+                        colors: ["#008FFB", '#00E396'],
+                        series: [{
+                            name: '本人历年发文量',
+                            data: data.amount1
+                        }, {
+                            name: '本人历年引用量',
+                            data: data.amount2
+                        }],
+                        tooltip: {
+                            enabled: false,
+                        },
+                        dataLabels: {
+                            enabled: true,
+                            textAnchor: 'end',
+                            offsetY: -10,
+                            offsetX: 5
+                        },
+                        xaxis: {
+                            categories: data.year
+                        },
+                        yaxis: [
+                            {
+                                axisTicks: {
+                                    show: true
+                                },
+                                axisBorder: {
+                                    show: true,
+                                    color: "#008FFB"
+                                },
+                                labels: {
+                                    style: {
+                                        color: "#008FFB"
+                                    }
+                                },
+                                min: data.Min1,
+                                max: data.Max1,
+                                title: {
+                                    text: "本人历年发文量"
+                                }
+                            },
+                            {
+                                opposite: true,
+                                axisTicks: {
+                                    show: true
+                                },
+                                axisBorder: {
+                                    show: true,
+                                    color: '#00E396'
+                                },
+                                labels: {
+                                    style: {
+                                        color: '#00E396'
+                                    }
+                                },
+                                min: data.Min2,
+                                max: data.Max2,
+                                title: {
+                                    text: "本人历年引用量"
+                                }
+                            }
+                        ],
+                        markers: {
+                            size: 1
+                        }
+                    }
+                    var chart = new ApexCharts(document.querySelector("#chart"), options);
+                    chart.render();
+                })
+            })
+        </script>
+        </br><a href="/predict" class="btn">预测</a>
+    </div>
+    <div class="item4" style="text-align: center">
+        <div class="text2">
+            近年论文</br></br>
+        </div>
+        <div id=display class="text4" style="text-align: center">
+            <script>
+                $(function () {
+                    $.get('/paper', function (data) {
+                        var list = data.paper;
+                        console.log(list);
+                        var str, i, j;
+                        str = "";
+                        for (i = 0; i < list.length && i < 10; i++) {
+                            str = str + "<div class = \"text2\">" + list[i][0] + "</br></div>"
+                            for (j = 0; j < list[i][1].length && j < 4; j++) {
+                                str = str + "《" + list[i][1][j] + "》</br>"
+                            }
+                        }
+                        display.innerHTML = str
+                    })
+                })
+            </script>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

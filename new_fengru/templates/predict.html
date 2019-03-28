@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Result</title>
+    <link rel="icon" href={{ url_for('static',filename = "images/favicon.ico") }}>
+    <link rel="shortcut icon" href={{ url_for('static',filename = "images/favicon.ico") }}>
+    <link rel="stylesheet" href={{ url_for('static',filename = "css/list.css") }}>
+    <link rel="stylesheet" href={{ url_for('static',filename = "css/style.css") }}>
+    <link rel="stylesheet" href={{ url_for('static',filename = "css/newWrapper2.css") }}>
+    <link rel="stylesheet" href={{ url_for('static',filename = "css/apexcharts.css") }}>
+    <script src="/static/js/apexcharts.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+</br></br></br>
+<div class="container_12">
+    <div class="grid_12">
+        <h1><a href="/Home"><img src="/static/images/logo_34.png" alt="Boo House"></a></h1>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="newWrapper2">
+    <div class=item11 style="text-align: center">
+        <div id='chart1' style="text-align: center"></div>
+        <script>
+            $(function () {
+                $.get('/data5', function (data) {
+                    var options = {
+                        chart: {
+                            type: 'line',
+                            height : 650,
+                            foreColor: '#000524'
+                        },
+                        title: {
+                            text: 'Unknown',
+                            align: 'left'
+                        },
+                        colors: ["#03428d", '#000000', "#42bf3a", "#44bf8f"],
+                        series: [{
+                            name: 'amount1',
+                            data: data.amount1,
+                            color: "#03428d"
+                        }, {
+                            name: 'amount2',
+                            data: data.amount2,
+                            color: "#000000"
+                        }, {
+                            name: 'avg1',
+                            data: data.avg1,
+                            color: "#42bf3a"
+                        }, {
+                            name: 'avg2',
+                            data: data.avg2,
+                            color: "#44bf8f"
+                        }],
+                        tooltip: {
+                            enabled: false,
+                        },
+                        dataLabels: {
+                            enabled: true,
+                            textAnchor: 'end',
+                            offsetY: -10,
+                            offsetX: 5
+                        },
+                        xaxis: {
+                            categories: data.year
+                        },
+                        yaxis: [
+                            {
+                                axisTicks: {
+                                    show: true
+                                },
+                                axisBorder: {
+                                    show: true,
+                                    color: "#03428d"
+                                },
+                                labels: {
+                                    style: {
+                                        color: "#03428d"
+                                    }
+                                },
+                                min: data.min1,
+                                max: data.max1,
+                                title: {
+                                    text: "amount1"
+                                }
+                            },
+                            {
+                                opposite: true,
+                                axisTicks: {
+                                    show: true
+                                },
+                                axisBorder: {
+                                    show: true,
+                                    color: "#000000"
+                                },
+                                labels: {
+                                    style: {
+                                        color: "#000000"
+                                    }
+                                },
+                                min: data.min2,
+                                max: data.max2,
+                                title: {
+                                    text: "amount2"
+                                }
+                            }
+                        ],
+                        markers: {
+                            size: 1
+                        }
+                    }
+                    var chart = new ApexCharts(document.querySelector("#chart1"), options);
+                    chart.render();
+                })
+            })
+        </script>
+    </div>
+    <div class=item12 style="text-align: center">
+        <div class="text2">能力图</div>
+        <div id='chart2' style="text-align: center"></div>
+        <script>
+            $(function () {
+                $.get('/data_ra', function (data_ra) {
+                    var options = {
+                        chart: {
+                            type: 'radar',
+                        },
+                        dataLabels: {},
+                        tooltip: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: 'Series 1',
+                            data: data_ra.ability,
+                        }],
+                        labels: ['α引用', 'α发文', 'h-index', 'i10-index', '最大引用量']
+                    }
+                    var chart = new ApexCharts(
+                        document.querySelector("#chart2"),
+                        options
+                    );
+                    chart.render()
+                })
+            })
+        </script>
+    </div>
+    <div class=item13 style="text-align: center">
+        <div class = "text2">
+            </br></br></br></br>
+            您在 α引用 方面表现不足 </br>
+            您在 α发文 方面表现不足 </br>
+            您在 h-index 方面表现不足 </br>
+            您在 i10-index 方面表现不足 </br>
+            您在 最大引用量 方面表现不足 </br></br>
+            我们预测您在 {{ year }} 年后成为杰出青年，请继续努力 </br>
+        </div>
+    </div>
+</div>
+</body>
+</html>
